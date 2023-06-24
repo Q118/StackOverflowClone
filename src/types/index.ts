@@ -12,3 +12,12 @@ export type Question = {
     link: string;
     title: string;
 };
+
+export type Answer = {
+    is_accepted: boolean;
+    score: number;
+    creation_date: number;
+    answer_id: number;
+    question_id: number;
+    body_markdown: string;
+};

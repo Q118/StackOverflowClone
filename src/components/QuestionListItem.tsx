@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Question } from '../types';
+import { decode } from 'html-entities';
 
 
 type QuestionProps = {
@@ -18,7 +19,7 @@ const QuestionListItem = ({ question }: QuestionProps) => {
                 </Text>
                 <Text style={styles.title}>{question.title}</Text>
                 <Text style={styles.body} numberOfLines={2}>
-                    {question.body_markdown}
+                    {decode(question.body_markdown)}
                 </Text>
                 {/* Tags */}
                 <View style={styles.tags}>
