@@ -1,31 +1,38 @@
 import { Text, View, StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
+import { Question } from '../types';
 
-const QuestionListItem = ({ question }: any) => {
+
+type QuestionProps = {
+    question: Question;
+};
+
+
+const QuestionListItem = ({ question }: QuestionProps) => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.stats}>
-                {question.score} votes · {question.answer_count} answers ·{' '}
-                {question.view_count} views
-            </Text>
-
-            <Text style={styles.title}>{question.title}</Text>
-            <Text style={styles.body} numberOfLines={2}>
-                {question.body_markdown}
-            </Text>
-
-            {/* Tags */}
-            <View style={styles.tags}>
-                {question.tags.map((tag: any) => (
-                    <Text style={styles.tag} key={tag}>
-                        {tag}
-                    </Text>
-                ))}
-
-                <Text style={styles.time}>
-                    asked {new Date(question.creation_date * 1000).toDateString()}
+        <Link href={`/${question.question_id}`}>
+            <View style={styles.container}>
+                <Text style={styles.stats}>
+                    {question.score} votes · {question.answer_count} answers ·{' '}
+                    {question.view_count} views
                 </Text>
+                <Text style={styles.title}>{question.title}</Text>
+                <Text style={styles.body} numberOfLines={2}>
+                    {question.body_markdown}
+                </Text>
+                {/* Tags */}
+                <View style={styles.tags}>
+                    {question.tags.map((tag: any) => (
+                        <Text style={styles.tag} key={tag}>
+                            {tag}
+                        </Text>
+                    ))}
+                    <Text style={styles.time}>
+                        asked {new Date(question.creation_date * 1000).toDateString()}
+                    </Text>
+                </View>
             </View>
-        </View>
+        </Link>
     );
 };
 
