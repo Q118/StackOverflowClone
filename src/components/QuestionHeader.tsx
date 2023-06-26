@@ -1,5 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+import { decode } from 'html-entities';
+// import { Entypo } from '@expo/vector-icons';
+import Markdown from 'react-native-markdown-display';
 import { Question } from '../types';
 
 type QuestionHeaderProps = {
@@ -9,70 +12,75 @@ type QuestionHeaderProps = {
 
 export const QuestionHeader = ({ question }: QuestionHeaderProps) => {
     return (
-        <>
-            <Text style={styles.title}>{question.title}</Text>
-            <Text style={styles.stats}>
-                {question.score} votes •{' '}
-                {question.is_answered && (
-                    <Entypo name="check" size={12} color="limegreen" />
-                )}
-                {question.answer_count} answers • {question.view_count} views
-            </Text>
-            <View style={styles.separator} />
-            <Text style={styles.body}>{question.body_markdown}</Text>
-            <View style={styles.tags}>
-                {question.tags.map((tag) => (
-                    <Text key={tag} style={styles.tag}>{tag}</Text>
-                ))}
-                <Text style={styles.time}>
-                    asked {new Date(question.creation_date * 1000).toDateString()}
-                </Text>
-            </View>
+        <Link href={`/${question.question_id}`}>
+            <View style={styles.container}>
+                <Text style={styles.title}>{decode(question.title)}</Text>
 
-            <Text style={{ fontSize: 16, marginVertical: 15 }}>
-                {question.answer_count} Answers
-            </Text>
-        </>
+                <Text style={styles.stats}>
+                    {question.score} votes · {question.answer_count} answers ·{' '}
+                    {question.view_count} views
+                </Text>
+
+                <View style={styles.separator} />
+                {/* @ts-ignore */}
+                <Markdown>{decode(question.body_markdown)}</Markdown>
+
+                {/* Tags */}
+                <View style={styles.tags}>
+                    {question.tags.map((tag) => (
+                        <Text style={styles.tag} key={tag}>
+                            {tag}
+                        </Text>
+                    ))}
+
+                    <Text style={styles.time}>
+                        asked {new Date(question.creation_date * 1000).toDateString()}
+                    </Text>
+                </View>
+            </View>
+        </Link>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        padding: 10,
+        borderBottomWidth: 0.5,
+        borderColor: 'lightgray',
+    },
     stats: {
         fontSize: 12,
     },
     title: {
+        color: '#3b4045',
         marginVertical: 5,
         fontSize: 20,
-        lineHeight: 28,
-        color: '#3b4045',
         fontWeight: '500',
+        lineHeight: 28,
     },
-    body: {
-        lineHeight: 18,
-        color: '#232629',
-    },
+    body: {},
     tags: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 5,
-        marginVertical: 10,
+        marginTop: 10,
         alignItems: 'center',
     },
     tag: {
         backgroundColor: '#e1ecf4',
         color: '#39739d',
         padding: 5,
-        fontSize: 12,
         borderRadius: 3,
         overflow: 'hidden',
+        fontSize: 12,
     },
     time: {
         marginLeft: 'auto',
         fontSize: 12,
-        color: '#6a737c',
+        color: 'dimgray',
     },
     separator: {
-        borderTopWidth: StyleSheet.hairlineWidth,
+        borderBottomWidth: 0.5,
         borderColor: 'lightgray',
         marginVertical: 10,
     },

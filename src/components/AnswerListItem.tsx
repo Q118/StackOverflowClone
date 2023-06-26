@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { AntDesign, Entypo } from '@expo/vector-icons';
 import { Answer } from '../types';
 import { decode } from 'html-entities';
-import Markdown, { MarkdownProps } from 'react-native-markdown-display';
+import Markdown from 'react-native-markdown-display';
 
 type AnswerListItemProps = {
     answer: Answer;

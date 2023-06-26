@@ -1,35 +1,44 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import { useSearchParams } from 'expo-router';
 import { QuestionHeader } from '../src/components/QuestionHeader';
-import * as questions from '../data/questions.json';
-import * as answers from '../data/answers.json';
+
 import { Question as QuestionType } from '../src/types';
 import { AnswerListItem } from '../src/components/AnswerListItem';
+import { useQuery } from 'urql';
+
+import { getQuestionQuery } from '../src/graphql/queries';
+
 
 const QuestionDetailsPage = () => {
-
     const { id } = useSearchParams();
+    const [ response ] = useQuery({
+        query: getQuestionQuery,
+        variables: { id },
+    });
 
-    const question = questions.items.find((question: QuestionType) => question.question_id + '' === id) as QuestionType;
+    if (response.fetching) {
+        return <ActivityIndicator />;
+    }
 
+    if (response.error) {
+        return <Text>Error: {response.error.message}</Text>;
+    }
 
-
-    console.log(question);
+    const question = response.data.question.items[ 0 ];
 
     if (!question) {
         return <Text>Question not found</Text>;
     }
 
     return (
-        <View>
-
+        <View style={{ backgroundColor: 'white', flex: 1 }}>
             <FlatList
-                data={answers.items}
+                data={question.answers}
                 renderItem={({ item }) => <AnswerListItem answer={item} />}
                 ListHeaderComponent={() => <QuestionHeader question={question} />}
             />
         </View>
     );
-}
+};
 
 export default QuestionDetailsPage;

@@ -17,7 +17,7 @@ const QuestionListItem = ({ question }: QuestionProps) => {
                     {question.score} votes · {question.answer_count} answers ·{' '}
                     {question.view_count} views
                 </Text>
-                <Text style={styles.title}>{question.title}</Text>
+                <Text style={styles.title}>{decode(question.title)}</Text>
                 <Text style={styles.body} numberOfLines={2}>
                     {decode(question.body_markdown)}
                 </Text>
